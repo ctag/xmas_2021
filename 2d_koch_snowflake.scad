@@ -52,66 +52,6 @@ function parse_pts(pts, i) = i == (len(pts) - 1) ?
 	koch_curve(pts[i], pts[0]) :
 	concat(koch_curve(pts[i], pts[i+1]), parse_pts(pts, i+1));
 
-module assembly() {
-	for (i = [0 : len(base)-1]) {
-		if (i != len(base)-1) {
-			/*one_third = pt_1_third(base[i], base[i+1]);
-			two_third = pt_2_third(base[i], base[i+1]);
-			one_half = pt_1_half(base[i], base[i+1]);
-			m = slope(base[i], base[i+1]);
-			pm = perp_slope(m);
-			d = dist(base[i], base[i+1]);
-			
-			x_p = dist(one_third, one_half);
-			y_p = tan(60) * x_p; // Distance to travel from one_half along slope pm
-			*/
-			
-			pointy = koch_curve(base[i], base[i+1]);
-			echo (pointy);
-			echo (edge_decider(base[i], base[i+1]));
-			
-			translate([pointy[2].x, pointy[2].y, 0])
-				#square([1, 1], center=true);
-			
-			//echo(i, base[i], base[i+1], one_third, one_half, two_third, m, pm, d, x_p, pointy);
-		} else {
-			/*
-			one_third = pt_1_third(base[i], base[0]);
-			two_third = pt_2_third(base[i], base[0]);
-			one_half = pt_1_half(base[i], base[0]);
-			m = slope(base[i], base[0]);
-			pm = perp_slope(m);
-			d = dist(base[i], base[0]);
-			
-			x_p = dist(one_third, one_half);
-			y_p = tan(60) * x_p; // Distance to travel from one_half along slope pm
-			x = (one_half.x) + (pm >= 0 ? 1 : -1) * ( (y_p) * sqrt(1/(1 + (pm^2))) );
-			y = pm == 1e200 * 1e200 ? 
-				(one_half.y) + (m > 0 ? 1 : -1) * y_p : 
-				(one_half.y) + (m > 0 ? 1 : -1) * ( (pm * y_p) * sqrt(1/(1+(pm^2))) );
-		 */
-
-			
-			pointy = koch_curve(base[i], base[0]);
-			echo (pointy);
-			echo (edge_decider(base[i], base[0]));
-			
-			translate([pointy[2].x, pointy[2].y, 0])
-				#square([1, 1], center=true);
-			
-			
-			//echo(i, base[i], base[0], one_third, one_half, two_third, m, pm, d, x_p, y_p, x, y);
-		}
-	}
-	
-	base_1 = parse_pts(base, 0);
-	base_2 = parse_pts(base_1, 0);
-	
-	echo("New base: ", base_1);
-	linear_extrude(2)
-		polygon(base_1);
-}
-
 module recurse() {
 	base_1 = parse_pts(base, 0);
 	base_2 = parse_pts(base_1, 0);
