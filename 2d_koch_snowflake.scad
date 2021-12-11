@@ -1,9 +1,9 @@
+//
+// 2D Koch Snowflake Ornament
+// Christopher Bero <bigbero@gmail.com>
+//
 
-
-$fa = 0.2;
-$fs = 0.2;
-
-level = 2; // Levels of recursion
+level = 5; // Levels of recursion
 l = 30; // Base length
 base = [[0, 0], [l/2, sin(60)*l], [l, 0]];
 
@@ -48,24 +48,24 @@ function koch_curve(p1, p2) = [
 	pt_2_third(p1, p2)
 ];
 
+// Feed one line segment into koch_curve at a time
 function parse_pts(pts, i) = i == (len(pts) - 1) ? 
 	koch_curve(pts[i], pts[0]) :
 	concat(koch_curve(pts[i], pts[i+1]), parse_pts(pts, i+1));
 
-module recurse() {
-	base_1 = parse_pts(base, 0);
-	base_2 = parse_pts(base_1, 0);
-	base_3 = parse_pts(base_2, 0);
+function recurse(n, pts) = n == 0 ? 
+	parse_pts(pts, 0) : 
+	parse_pts(recurse(n-1, pts), 0);
+
+module assembly() {
+	r = recurse(level, base);
 	
-	echo("New base: ", base_3);
+	echo("New base: ", r);
 	linear_extrude(2)
-		polygon(base_3);
+		polygon(r);
 }
 
-
-
-
-recurse();
+assembly();
 
 
 
